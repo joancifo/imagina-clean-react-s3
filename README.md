@@ -31,6 +31,11 @@ Usuario activo: clave `userId` de `localStorage` (`u1` admin, `u2` manager, `u3`
 | `npm run demo:tema4` | Núcleo por capas probado sin React, navegador ni red |
 | `npm run lint:arch` | Regla de dependencia entre capas de `src/orders` |
 | `npm run test:arch` | Test que demuestra que las reglas detectan violaciones |
+| `npm run demo:tema5` | Vertical slice «Aprobar pedido»: regla, comando, adapter y UI en una carpeta |
+| `npm run demo:tema6` | Value object, entidad y aggregate, domain service y specification |
+| `npm run boundaries` | Imports entre carpetas y accesos que se saltan la API pública de Pedidos |
+| `npm run rules` | Candidatos a reglas de negocio escondidas fuera del dominio |
+| `npm run lint:boundaries` | El código heredado solo importa Pedidos desde `src/orders/index.ts` |
 
 ## Material de la Sesión 1
 - `examples/tema1/` — ejemplos ejecutables del Tema 1
@@ -49,4 +54,14 @@ Usuario activo: clave `userId` de `localStorage` (`u1` admin, `u2` manager, `u3`
 - `prompts/sesion-2.md` — prompts de GitHub Copilot
 - `docs/ejercicio-s2.md` — ejercicio de la sesión
 
-Trabaja en una rama propia por sesión: `git checkout -b s2/<tu-nombre>`.
+## Material de la Sesión 3
+- `examples/tema5/approve-order/` — un vertical slice completo con su API pública
+- `examples/tema6/` — Money, entidad y aggregate, domain service y specification
+- `src/orders/domain/result.ts` — errores previsibles como valores
+- `src/orders/index.ts` y `eslint.boundaries.js` — API pública de la feature Pedidos
+- `scripts/boundaries.mjs` y `scripts/find-rules.mjs` — análisis de estructura y de reglas
+- `docs/adr/001-estructura-pedidos.md` — decisión de estructura (proyecto final)
+- `prompts/sesion-3.md` — prompts de GitHub Copilot
+- `docs/ejercicio-s3.md` — ejercicio de la sesión
+
+Trabaja en una rama propia por sesión: `git checkout -b s3/<tu-nombre>`.

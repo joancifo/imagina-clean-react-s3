@@ -9,4 +9,9 @@
 - [ ] `npm run lint:arch` y `npm run test:arch` en verde.
 - [ ] No hay interfaces nuevas con una sola implementación que no crucen un límite.
 
+## Dominio y boundaries (Sesión 3)
+- [ ] Las reglas de negocio nuevas o movidas viven en `src/orders/domain` una sola vez (`npm run rules`).
+- [ ] Los errores previsibles se devuelven como `Result` y tienen mensaje en `ui/`.
+- [ ] El código heredado importa Pedidos solo desde `../orders` (`npm run lint:boundaries`).
+
 ## Cómo lo he comprobado

@@ -11,4 +11,13 @@ Cada pregunta se responde con evidencia (`ruta:línea`, salida de un comando o u
 | DIP | ¿El núcleo importa detalles? | `fetch`, axios, `localStorage` o React en reglas y casos de uso | `npm run lint:arch` |
 | Abstracción | ¿La interfaz nueva aporta? | `IFoo` + `FooImpl` con una sola implementación y sin límite que cruzar | ¿Hay 2 implementaciones reales (contando los tests) o un límite de capa? |
 
-Fuentes: R. C. Martin, *Clean Architecture* (2017), caps. 7–11; documentación de ESLint (`no-restricted-imports`, `no-restricted-globals`); TypeScript 4.9 (`satisfies`).
+## Dominio (Sesión 3)
+| Pregunta | Señal de alarma | Comprobación |
+|---|---|---|
+| ¿La regla de negocio vive en `domain/` una sola vez? | El mismo umbral o rol comparado en varias pantallas | `npm run rules` |
+| ¿Los valores con reglas propias son value objects? | `string`/`number` validados en el handler | Factory + tests del value object |
+| ¿Los errores previsibles están en el tipo de retorno? | `throw` o `alert` para una regla de negocio | `Result<…>` y `satisfies Record<Error, string>` |
+| ¿Las transiciones son inmutables? | Mutar el pedido recibido | Test con `Object.freeze` |
+| ¿Se respeta la API pública de la feature? | `import … from '../orders/domain/…'` desde fuera | `npm run lint:boundaries` |
+
+Fuentes: R. C. Martin, *Clean Architecture* (2017), caps. 7–11; E. Evans, *Domain-Driven Design* (2003); V. Vernon, *Implementing Domain-Driven Design* (2013); documentación de ESLint (`no-restricted-imports`, `no-restricted-globals`); TypeScript 4.9 (`satisfies`).

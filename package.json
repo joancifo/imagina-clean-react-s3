@@ -1,7 +1,7 @@
 {
   "name": "orderdesk",
   "private": true,
-  "version": "0.10.0",
+  "version": "0.11.0",
   "type": "module",
   "description": "Backoffice de pedidos ficticio con code smells sembrados para el curso de Clean Architecture",
   "scripts": {
@@ -19,7 +19,12 @@
     "demo:tema3": "vitest run examples/tema3",
     "demo:tema4": "vitest run examples/tema4 src/orders",
     "lint:arch": "eslint --config eslint.architecture.js src/orders",
-    "test:arch": "vitest run src/orders/architecture"
+    "test:arch": "vitest run src/orders/architecture",
+    "demo:tema5": "vitest run examples/tema5",
+    "demo:tema6": "vitest run examples/tema6",
+    "boundaries": "node scripts/boundaries.mjs",
+    "rules": "node scripts/find-rules.mjs",
+    "lint:boundaries": "eslint --config eslint.boundaries.js src"
   },
   "dependencies": {
     "axios": "^1.7.9",

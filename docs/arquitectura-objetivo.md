@@ -6,7 +6,8 @@ src/orders/
 ├── application/      Casos de uso y puertos (interfaces que el núcleo necesita)
 ├── infrastructure/   Adapters: HTTP, memoria, storage, analytics + DTO y mappers
 ├── ui/               Hooks adaptadores, view models y componentes
-└── composition.ts    Elige implementaciones concretas y las conecta
+├── composition.ts    Elige implementaciones concretas y las conecta
+└── index.ts          API pública: lo único que el resto de la app puede importar
 ```
 
 | Capa | Anillo de Clean Architecture | Puede importar | No puede importar |
@@ -17,7 +18,7 @@ src/orders/
 | `ui` | Adaptadores de interfaz (presentación) | `domain`, `application`, `composition` | `infrastructure` |
 | `composition.ts` | Frameworks y drivers / main | todo | — |
 
-Reglas automáticas: `eslint.architecture.js` (`npm run lint:arch`) y su test (`npm run test:arch`).
+Reglas automáticas: `eslint.architecture.js` (`npm run lint:arch`) y su test (`npm run test:arch`); `eslint.boundaries.js` (`npm run lint:boundaries`) para la API pública.
 
 ## Mi clasificación del código heredado (tarea antes de la Sesión 3)
 Copia este archivo como `docs/arquitectura-<tu-nombre>.md` y completa la tabla.
