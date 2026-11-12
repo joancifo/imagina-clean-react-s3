@@ -1,8 +1,8 @@
 # ADR-001 · Estructura de la feature Pedidos
 
-- **Estado:** propuesto
+- **Estado:** aceptado (versión de referencia del profesor)
 - **Fecha:** 12/11/2026
-- **Autoría:** <tu-nombre>
+- **Autoría:** Joan Cifo
 
 ## Contexto
 - OrderDesk organiza el código heredado **por tipo** (`pages`, `components`, `hooks`, `services`, `shared`, `store`). `npm run boundaries`: 14 pares de carpetas acopladas.
@@ -18,11 +18,18 @@
 | 3. Vertical Slice por capacidad (`src/orders/approve-order/…`) | Cada cambio en una carpeta | Riesgo de duplicar reglas entre slices |
 
 ## Decisión
-<!-- Escribe tu decisión y el criterio que la justifica. Ejemplo de formato:
-Elegimos la opción N porque… Aplicaremos slices dentro de la feature solo cuando… -->
+Opción 2: **feature modular** `src/orders` con capas internas y **API pública** (`src/orders/index.ts`).
+Criterio: una sola feature de negocio con reglas compartidas por tres pantallas (total, urgencia, cancelación). Las capas internas protegen el núcleo; la API pública permite reorganizar por dentro sin romper a quien la usa.
+
+Usaremos **slices dentro de la feature** (`src/orders/<capacidad>/`) solo cuando una capacidad tenga UI, caso de uso y adapter propios y cambie por su cuenta (candidata: «Aprobar pedido», ver `examples/tema5/approve-order`). Los slices comparten `domain/` y no se importan entre sí.
 
 ## Consecuencias
-<!-- Qué ganamos, qué aceptamos perder, qué controles automáticos lo protegen (comandos). -->
+- Positivas: una regla de cancelación en lugar de tres; el heredado solo ve `../orders`; reglas comprobadas en CI (Sesión 9).
+- Aceptadas: más carpetas que en una app trivial; un puente temporal (`toOrder`, `toActor`) en la API pública mientras convivan pantallas heredadas.
+- Controles: `npm run lint:arch`, `npm run test:arch`, `npm run lint:boundaries`, `npm run rules`.
 
 ## Lo que decidimos NO hacer
-<!-- p. ej. CQRS, contenedor IoC, Aggregates en todo el modelo… y por qué. -->
+- **CQRS**: lecturas y escrituras no tienen modelos ni ritmos distintos; separarlas duplicaría tipos.
+- **Aggregates en todo el modelo**: solo `Order` protege la consistencia de sus líneas; cliente y usuario no tienen invariantes compartidas.
+- **Specification como norma**: `isUrgent` basta mientras no haya combinaciones de filtros de negocio.
+- **Capas globales**: con una segunda feature (p. ej. clientes), cada capa mezclaría features.

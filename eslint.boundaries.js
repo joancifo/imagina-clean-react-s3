@@ -10,7 +10,12 @@ export default tseslint.config(
   { files: ['src/**/*.{ts,tsx}'], languageOptions: { parser: tseslint.parser }, plugins: { '@typescript-eslint': tseslint.plugin }, linterOptions: { reportUnusedDisableDirectives: 'off' } },
 
   // CÓDIGO HEREDADO: «../orders» sí; «../orders/domain/…», «../orders/infrastructure/…» no.
-  // TODO (Parte C): files: LEGACY
-  //   no-restricted-imports → patrón '**/orders/**'
-  //   mensaje: 'Usa Pedidos a través de su API pública: import { … } from "../orders".'
+  {
+    files: LEGACY,
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [{ group: ['**/orders/**'], message: 'Usa Pedidos a través de su API pública: import { … } from "../orders".' }],
+      }],
+    },
+  },
 );

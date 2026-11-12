@@ -22,27 +22,31 @@ export type OrderCancelled = {
   occurredAt: string; // ISO 8601
 };
 
-// Ejercicio S3 · Parte B · paso 2: regla oficial, en este orden:
-// no-session → already-closed → admin ok → manager (pendiente y total < MANAGER_CANCEL_LIMIT) → forbidden.
 /** Devuelve el actor ya autorizado: quien recibe un ok no necesita volver a comprobar null. */
 export function checkCancellation(order: Order, actor: Actor | null): Result<Actor, CancellationDenied> {
-  void [order, actor, calculateTotal, err, ok];
-  throw new Error('Por implementar (ejercicio S3 · Parte B · paso 2)');
+  if (actor === null) return err('no-session');
+  if (order.status === 'shipped' || order.status === 'cancelled') return err('already-closed');
+  if (actor.role === 'admin') return ok(actor);
+  if (actor.role === 'manager' && order.status === 'pending') {
+    return calculateTotal(order) < MANAGER_CANCEL_LIMIT ? ok(actor) : err('over-manager-limit');
+  }
+  return err('forbidden');
 }
 
-// Paso 3: booleano para la UI. No repitas la regla: delega.
 export function canCancel(order: Order, actor: Actor | null): boolean {
-  void [order, actor];
-  throw new Error('Por implementar (ejercicio S3 · Parte B · paso 3)');
+  return checkCancellation(order, actor).ok;
 }
 
-// Paso 4: pedido NUEVO en estado 'cancelled' + evento OrderCancelled (occurredAt = now.toISOString()).
 export function cancelOrder(
   order: Order,
   actor: Actor | null,
   reason: CancellationReason,
   now: Date,
 ): Result<{ order: Order; event: OrderCancelled }, CancellationDenied> {
-  void [order, actor, reason, now];
-  throw new Error('Por implementar (ejercicio S3 · Parte B · paso 4)');
+  const check = checkCancellation(order, actor);
+  if (!check.ok) return check;
+  return ok({
+    order: { ...order, status: 'cancelled' },
+    event: { type: 'OrderCancelled', orderId: order.id, cancelledBy: check.value.id, reason, occurredAt: now.toISOString() },
+  });
 }

@@ -9,8 +9,7 @@ async function errorsFor(filePath: string, code: string): Promise<string[]> {
   return result.messages.map((m) => m.ruleId ?? 'parse-error');
 }
 
-// Parte C · paso 4: quita .skip
-describe.skip('API pública de Pedidos', () => {
+describe('API pública de Pedidos', () => {
   it('el código heredado no puede importar el interior de src/orders', async () => {
     expect(await errorsFor('src/pages/X.tsx', "import { canCancel } from '../orders/domain/cancellation';")).toContain('no-restricted-imports');
     expect(await errorsFor('src/hooks/x.ts', "import { toOrder } from '../orders/infrastructure/order-mapper';")).toContain('no-restricted-imports');

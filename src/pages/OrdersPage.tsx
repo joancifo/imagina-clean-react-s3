@@ -7,6 +7,7 @@ import { useAppStore } from '../store/appStore';
 import { doAction } from '../services/api';
 import { formatCurrency, trackEvent } from '../shared/utils';
 import type { Order } from '../shared/types';
+import { CANCELLATION_MESSAGES, canCancel, createCancellationReason, toActor, toOrder } from '../orders';
 
 export default function OrdersPage() {
   const navigate = useNavigate();
@@ -60,12 +61,9 @@ export default function OrdersPage() {
     return () => clearTimeout(t);
   }, [toast]);
 
-  // Primera versión de la regla de cancelación: manager, solo pendientes por debajo de 5000 €.
-  const canCancelOrder = (o: Order) => {
-    if (user?.usr_role === 'admin') return o.ord_st === 'pending' || o.ord_st === 'approved';
-    if (user?.usr_role === 'manager') return o.ord_st === 'pending' && (o.total ?? 0) < 5000;
-    return false;
-  };
+  // Regla oficial de cancelación: vive en el dominio (src/orders/domain/cancellation.ts).
+  const actor = toActor(user);
+  const canCancelOrder = (o: Order) => canCancel(toOrder(o), actor);
 
   const updateOrder = (updated: Order, total: number | undefined) => {
     setOrders(orders.map((o) => (o.ord_id === updated.ord_id ? { ...o, ...updated, total } : o)));
@@ -112,14 +110,15 @@ export default function OrdersPage() {
 
   const handleCancel = async () => {
     if (!reasonFor) return;
-    if (reason.trim().length < 10) {
-      alert('Indica un motivo de al menos 10 caracteres');
+    const parsed = createCancellationReason(reason);
+    if (!parsed.ok) {
+      alert(CANCELLATION_MESSAGES[parsed.error]);
       return;
     }
     setSaving(true);
     const updated = await doAction(reasonFor.ord_id, 'cancel');
     updateOrder(updated, reasonFor.total);
-    trackEvent('order_cancelled', { id: reasonFor.ord_id, reason });
+    trackEvent('order_cancelled', { id: reasonFor.ord_id, reason: parsed.value });
     setToast('Pedido cancelado');
     setReasonFor(null);
     setReason('');

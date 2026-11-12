@@ -3,6 +3,7 @@ import { getOrders } from '../services/api';
 import { formatCurrency } from '../shared/utils';
 import useCurrentUser from '../hooks/useCurrentUser';
 import type { Order } from '../shared/types';
+import { canCancel, toActor, toOrder } from '../orders';
 
 export default function DashboardPage() {
   const user = useCurrentUser();
@@ -20,11 +21,9 @@ export default function DashboardPage() {
 
   const pending = rows.filter((r) => r.status === 'pending');
   const revenue = rows.filter((r) => r.status === 'shipped' || r.status === 'approved').reduce((a, r) => a + r.total, 0);
-  // Tercera versión de la regla de cancelación.
-  const cancellable = rows.filter((r) => {
-    if (user?.usr_role === 'admin') return r.status !== 'shipped';
-    return user?.usr_role === 'manager' && r.status === 'pending' && r.total <= 6000;
-  });
+  // Regla oficial de cancelación (dominio), sobre el pedido completo y no sobre la fila resumida.
+  const actor = toActor(user);
+  const cancellable = orders.filter((o) => canCancel(toOrder(o), actor));
 
   return (
     <main className="page">

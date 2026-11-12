@@ -2,8 +2,7 @@
 // Ejercicio S3 · Parte A · Especificación del value object CancellationReason.
 import { createCancellationReason, REASON_MAX_LENGTH, REASON_MIN_LENGTH } from './cancellation-reason';
 
-// Parte A · paso 1: quita .skip
-describe.skip('CancellationReason', () => {
+describe('CancellationReason', () => {
   it('normaliza: quita espacios en los extremos y colapsa los interiores', () => {
     expect(createCancellationReason('  Cliente   duplicado  en el ERP ')).toEqual({ ok: true, value: 'Cliente duplicado en el ERP' });
   });

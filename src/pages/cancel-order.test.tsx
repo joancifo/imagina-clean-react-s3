@@ -58,8 +58,7 @@ beforeEach(() => {
 
 afterEach(() => vi.restoreAllMocks());
 
-// Parte A · paso 5: quita .skip
-describe.skip('Parte A · el motivo se valida con el value object', () => {
+describe('Parte A · el motivo se valida con el value object', () => {
   it('un motivo de espacios no cuenta como texto: avisa y no llama a la API', async () => {
     const alert = vi.spyOn(window, 'alert').mockImplementation(() => {});
     renderAt('/', MANAGER);
@@ -72,8 +71,7 @@ describe.skip('Parte A · el motivo se valida con el value object', () => {
   });
 });
 
-// Parte C · paso 4: quita .skip
-describe.skip('Parte C · una sola regla de cancelación en las tres pantallas', () => {
+describe('Parte C · una sola regla de cancelación en las tres pantallas', () => {
   it('detalle: un admin NO puede cancelar un pedido ya enviado', async () => {
     renderAt('/orders/P-1004', ADMIN);
     await screen.findByText(/Total con IVA/);

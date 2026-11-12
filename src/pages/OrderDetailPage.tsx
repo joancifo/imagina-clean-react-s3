@@ -5,6 +5,7 @@ import { formatCurrency, formatDate, trackEvent } from '../shared/utils';
 import { useAppStore } from '../store/appStore';
 import Badge from '../components/Badge';
 import type { Order } from '../shared/types';
+import { canCancel, toActor, toOrder } from '../orders';
 
 export default function OrderDetailPage() {
   const { id } = useParams();
@@ -27,8 +28,8 @@ export default function OrderDetailPage() {
 
   if (!order) return <main className="page">Cargando…</main>;
 
-  // Segunda versión de la regla de cancelación: sin límite de importe para manager.
-  const canCancel = user?.usr_role === 'admin' || (user?.usr_role === 'manager' && order.ord_st !== 'shipped');
+  // Regla oficial de cancelación (dominio).
+  const cancellable = canCancel(toOrder(order), toActor(user));
 
   const cancel = async () => {
     await doAction(order.ord_id, 'cancel');
@@ -50,7 +51,7 @@ export default function OrderDetailPage() {
         </tbody>
       </table>
       <p><strong>Total con IVA: {formatCurrency(total)}</strong></p>
-      {canCancel && <button onClick={cancel}>Cancelar pedido</button>}
+      {cancellable && <button onClick={cancel}>Cancelar pedido</button>}
     </main>
   );
 }

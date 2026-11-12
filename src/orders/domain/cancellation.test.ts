@@ -18,8 +18,7 @@ const reason = (text: string): CancellationReason => {
   return result.value;
 };
 
-// Parte B · paso 1: quita .skip en los dos describe
-describe.skip('regla oficial de cancelación', () => {
+describe('regla oficial de cancelación', () => {
   // Totales con IVA (cliente standard): 1000 → 1210 € · 4000 → 4840 € · 4200 → 5082 €
   const cases: [string, Order, Actor | null, true | CancellationDenied][] = [
     ['sin sesión', anOrder('pending'), null, 'no-session'],
@@ -41,7 +40,7 @@ describe.skip('regla oficial de cancelación', () => {
   });
 });
 
-describe.skip('cancelOrder', () => {
+describe('cancelOrder', () => {
   const now = new Date('2026-11-12T18:00:00Z');
 
   it('devuelve el pedido cancelado y el evento OrderCancelled', () => {
